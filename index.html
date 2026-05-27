@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《小麦说》·正式书稿</title>
+    <meta name="description" content="《小麦说》正式书稿，一部关于认知、行动、创造、商业、关系与生命修行的思想非虚构作品。">
+    <meta name="theme-color" content="#faf9f6">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16.png">
+    <link rel="icon" href="./assets/icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
+    <script src="./assets/tailwindcss.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        :root {
+            --book-bg: #faf9f6;
+            --book-paper: #fffdf8;
+            --book-ink: #1f2937;
+            --book-muted: #6b7280;
+            --book-line: rgba(120, 113, 108, 0.18);
+            --book-accent: #9a3412;
+            --reader-width: 48rem;
+            --reader-line-height: 2;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark {
+            --book-paper: rgba(31, 41, 55, 0.86);
+            --book-ink: #f3f4f6;
+            --book-muted: #9ca3af;
+            --book-line: rgba(148, 163, 184, 0.22);
+            --book-accent: #f59e0b;
+        }
+
+        .prose p {
+            text-indent: 2em;
+            line-height: var(--reader-line-height);
+            margin-bottom: 1.5em;
+            text-align: justify;
+            letter-spacing: 0.05em;
+        }
+
+        .prose h1 {
+            font-size: 1.72em;
+            font-weight: 700;
+            margin-bottom: 0.9em;
+            line-height: 1.32;
+            text-align: center;
+        }
+
+        .prose h2 {
+            font-size: 1.22em;
+            font-weight: 700;
+            margin-top: 1.7em;
+            margin-bottom: 0.95em;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.55em;
+        }
+
+        .dark .prose h2 {
+            border-bottom-color: #4a5568;
+        }
+
+        .prose h3 {
+            font-size: 1.25em;
+            font-weight: bold;
+            margin-top: 1.2em;
+            margin-bottom: 0.8em;
+        }
+
+        .cover-page {
+            min-height: calc(100vh - 18rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-indent: 0;
+        }
+
+        .cover-card {
+            width: min(100%, 42rem);
+            padding: 4rem 2rem;
+            border: 1px solid var(--book-line);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.92)),
+                radial-gradient(circle at top, rgba(154, 52, 18, 0.08), transparent 42%);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+        }
+
+        .dark .cover-card {
+            background:
+                linear-gradient(180deg, rgba(31, 41, 55, 0.72), rgba(17, 24, 39, 0.9)),
+                radial-gradient(circle at top, rgba(245, 158, 11, 0.08), transparent 42%);
+            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.32);
+        }
+
+        .cover-kicker {
+            letter-spacing: 0.45em;
+            color: var(--book-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .cover-title {
+            font-family: "STSong", "Songti SC", "Noto Serif SC", Georgia, serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            line-height: 1.15;
+            letter-spacing: 0.12em;
+            margin-bottom: 1.25rem;
+            color: var(--book-ink);
+        }
+
+        .cover-subtitle {
+            font-family: "STSong", "Songti SC", "Noto Serif SC", Georgia, serif;
+            font-size: 1.2rem;
+            color: var(--book-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .cover-author {
+            letter-spacing: 0.28em;
+            color: var(--book-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .cover-rule {
+            width: 4rem;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--book-accent), transparent);
+            margin: 0 auto 2rem;
+        }
+
+        .cover-description {
+            max-width: 32rem;
+            margin: 0 auto;
+            color: var(--book-muted);
+            line-height: 2;
+        }
+
+        .cover-epigraph {
+            max-width: 24rem;
+            margin: 2.75rem auto 0;
+            color: var(--book-muted);
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.9;
+        }
+
+        .chapter-signature {
+            margin-top: 3.5rem;
+            text-align: right;
+            color: var(--book-muted);
+            letter-spacing: 0.12em;
+        }
+
+        @media print {
+            body {
+                background: #fff !important;
+                color: #111827 !important;
+            }
+
+            #sidebar,
+            #overlay,
+            #top-toolbar-shell,
+            #bottom-nav,
+            #reading-progress-shell {
+                display: none !important;
+            }
+
+            #main-scroll {
+                overflow: visible !important;
+                height: auto !important;
+            }
+
+            .reader-shell {
+                max-width: none !important;
+                width: 100% !important;
+            }
+
+            #content-area {
+                box-shadow: none !important;
+                border: none !important;
+                background: #fff !important;
+                padding: 0 !important;
+            }
+
+            .cover-card {
+                box-shadow: none !important;
+                border-color: #d1d5db !important;
+            }
+        }
+
+        .reader-shell {
+            width: 100%;
+            max-width: var(--reader-width);
+            transition: max-width 0.25s ease;
+        }
+
+        #top-toolbar-shell {
+            height: 3.5rem;
+            overflow: hidden;
+            transition: height 0.24s ease, opacity 0.24s ease;
+        }
+
+        #top-toolbar-shell.toolbar-hidden {
+            height: 0;
+            opacity: 0;
+        }
+
+        #top-toolbar {
+            height: 3.5rem;
+            background: rgba(255, 253, 248, 0.72);
+            border-bottom: 1px solid rgba(120, 113, 108, 0.12);
+            backdrop-filter: blur(14px);
+        }
+
+        .dark #top-toolbar {
+            background: rgba(17, 24, 39, 0.62);
+            border-bottom-color: rgba(148, 163, 184, 0.12);
+        }
+
+        .toolbar-btn {
+            padding: 0.45rem 0.62rem;
+            font-size: 0.82rem;
+            color: var(--book-muted);
+            border-radius: 999px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .toolbar-btn:hover {
+            background: rgba(120, 113, 108, 0.08);
+            color: var(--book-ink);
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 1.1rem;
+            background: rgba(120, 113, 108, 0.2);
+            margin: 0 0.15rem;
+        }
+
+        .resume-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 999px;
+            border: 1px solid rgba(154, 52, 18, 0.18);
+            color: #7c2d12;
+            background: rgba(154, 52, 18, 0.06);
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .resume-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(154, 52, 18, 0.1);
+            border-color: rgba(154, 52, 18, 0.28);
+        }
+
+        .cover-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .dark .resume-btn {
+            color: #fdba74;
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.18);
+        }
+
+        .dark .resume-btn:hover {
+            background: rgba(245, 158, 11, 0.14);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .tts-panel-shell {
+            border-bottom: 1px solid rgba(120, 113, 108, 0.12);
+            background: rgba(250, 249, 246, 0.94);
+            backdrop-filter: blur(14px);
+        }
+
+        .dark .tts-panel-shell {
+            background: rgba(17, 24, 39, 0.92);
+            border-bottom-color: rgba(148, 163, 184, 0.14);
+        }
+
+        .tts-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem 0.9rem;
+        }
+
+        .tts-panel-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .tts-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.58rem 0.92rem;
+            border-radius: 999px;
+            border: 1px solid rgba(120, 113, 108, 0.16);
+            background: rgba(255, 253, 248, 0.92);
+            color: var(--book-ink);
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .tts-chip:hover {
+            transform: translateY(-1px);
+            border-color: rgba(120, 113, 108, 0.24);
+            background: rgba(255, 253, 248, 1);
+        }
+
+        .tts-chip[disabled] {
+            opacity: 0.48;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .tts-chip-primary {
+            border-color: rgba(154, 52, 18, 0.18);
+            background: rgba(154, 52, 18, 0.08);
+            color: #7c2d12;
+        }
+
+        .tts-chip-primary:hover {
+            border-color: rgba(154, 52, 18, 0.26);
+            background: rgba(154, 52, 18, 0.12);
+        }
+
+        .tts-chip-primary[data-state="active"] {
+            background: rgba(154, 52, 18, 0.16);
+            border-color: rgba(154, 52, 18, 0.28);
+        }
+
+        .dark .tts-chip {
+            background: rgba(31, 41, 55, 0.92);
+            border-color: rgba(148, 163, 184, 0.18);
+            color: #f3f4f6;
+        }
+
+        .dark .tts-chip:hover {
+            background: rgba(31, 41, 55, 1);
+            border-color: rgba(148, 163, 184, 0.28);
+        }
+
+        .dark .tts-chip-primary {
+            color: #fdba74;
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.18);
+        }
+
+        .dark .tts-chip-primary:hover,
+        .dark .tts-chip-primary[data-state="active"] {
+            background: rgba(245, 158, 11, 0.16);
+            border-color: rgba(245, 158, 11, 0.28);
+        }
+
+        .tts-status {
+            font-size: 0.92rem;
+            color: var(--book-muted);
+            min-height: 1.35rem;
+        }
+
+        .tts-block-active {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.14), rgba(245, 158, 11, 0.02));
+            box-shadow: inset 3px 0 0 rgba(217, 119, 6, 0.8);
+            border-radius: 0.35rem;
+            transition: background-color 0.28s ease, box-shadow 0.28s ease;
+        }
+
+        .dark .tts-block-active {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.04));
+            box-shadow: inset 3px 0 0 rgba(251, 191, 36, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .tts-panel {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        #reading-progress {
+            transition: width 0.18s ease-out;
+        }
+
+        /* 侧边栏过渡动画 */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                height: 100%;
+                z-index: 50;
+                transform: translateX(-100%);
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-[#faf9f6] text-gray-800 dark:bg-gray-900 dark:text-gray-300 h-screen flex overflow-hidden antialiased">
+
+    <!-- 遮罩层 (移动端) -->
+    <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- 侧边栏目录 -->
+    <aside id="sidebar"
+        class="w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col shadow-lg md:shadow-none shrink-0">
+        <div class="h-16 flex items-center px-6 border-b border-gray-200 dark:border-gray-700 justify-between shrink-0">
+            <h1 class="text-xl font-bold tracking-wider">目录</h1>
+            <button
+                class="md:hidden p-2 -mr-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                onclick="toggleSidebar()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4" id="toc-container">
+            <!-- 目录由 JS 生成 -->
+        </div>
+        <div
+            class="p-4 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400 text-center shrink-0">
+            《小麦说》
+        </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 flex flex-col h-full relative">
+        <!-- 顶栏工具条 -->
+        <div id="top-toolbar-shell" class="shrink-0">
+            <header id="top-toolbar" class="flex items-center justify-between px-4 md:px-8 z-10 shrink-0">
+                <div class="flex items-center min-w-0">
+                    <button class="md:hidden toolbar-btn -ml-1 mr-2 shrink-0" onclick="toggleSidebar()" title="打开目录">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <span class="text-sm text-gray-500 dark:text-gray-400 truncate" id="header-title">正在阅读...</span>
+                </div>
+
+                <div class="flex items-center shrink-0" id="top-controls">
+                    <button onclick="changeFontSize(-2)" class="toolbar-btn" title="缩小字号">
+                        A-
+                    </button>
+                    <button onclick="changeFontSize(2)" class="toolbar-btn" title="放大字号">
+                        A+
+                    </button>
+                    <button id="width-btn" onclick="cycleContentWidth()" class="toolbar-btn hidden sm:inline-flex"
+                        title="切换版心宽度">
+                        版心
+                    </button>
+                    <button id="spacing-btn" onclick="cycleLineHeight()" class="toolbar-btn hidden sm:inline-flex"
+                        title="切换行距">
+                        行距
+                    </button>
+                    <button id="tts-toolbar-btn" onclick="toggleTtsPanel()" class="toolbar-btn" title="听书">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                        </svg>
+                    </button>
+                    <div class="toolbar-divider hidden sm:block"></div>
+                    <button onclick="toggleTheme()" class="toolbar-btn" title="切换深色/浅色模式">
+                        <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="block dark:hidden">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+        </div>
+        <div class="h-1 bg-stone-200/70 dark:bg-gray-800 shrink-0">
+            <div id="reading-progress"
+                class="h-full w-0 bg-gradient-to-r from-amber-700 via-orange-600 to-amber-500 dark:from-amber-500 dark:via-orange-400 dark:to-amber-300">
+            </div>
+        </div>
+        <div id="tts-panel-shell" class="tts-panel-shell hidden">
+            <div class="reader-shell mx-auto px-6">
+                <div class="tts-panel">
+                    <div class="tts-panel-actions">
+                        <button id="tts-main-btn" class="tts-chip tts-chip-primary" onclick="toggleTtsPlayback()" type="button">
+                            听本章
+                        </button>
+                        <button id="tts-stop-btn" class="tts-chip" onclick="stopTtsPlayback(true)" type="button">
+                            停止
+                        </button>
+                        <button id="tts-rate-btn" class="tts-chip" onclick="cycleTtsRate()" type="button">
+                            语速 1.0x
+                        </button>
+                    </div>
+                    <div id="tts-status" class="tts-status">听书会从当前章节开始朗读，并记住听到的位置。</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文本阅读区 -->
+        <div id="main-scroll" class="flex-1 overflow-y-auto scroll-smooth pb-24">
+            <div class="reader-shell mx-auto px-6 py-10 md:py-16 prose" id="content-area" style="font-size: 18px;">
+                <!-- 内容由 JS 渲染 -->
+            </div>
+
+            <!-- 底部导航按钮 -->
+            <div
+                class="reader-shell mx-auto px-6 flex justify-between items-center pt-8 border-t border-gray-200 dark:border-gray-700 mb-12">
+                <button id="prev-btn" onclick="prevChapter()"
+                    class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="mr-2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    上一篇
+                </button>
+                <button id="next-btn" onclick="nextChapter()"
+                    class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    下一篇
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="ml-2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 图书索引：内容在 content/book.json 与 content/chapters/*.md 中维护
+        const BOOK_INDEX_URL = './content/book.json';
+        const CONTENT_VERSION = '2026-05-27-final-198225-source-aligned';
+        let bookConfig = null;
+        let bookData = [];
+
+        let currentIndex = 0;
+        let currentFontSize = 18;
+        const STORAGE_KEY = 'xiaomaishuo-book-reader-state';
+        const WIDTH_MODES = [
+            { key: 'narrow', label: '版心：窄', value: '44rem' },
+            { key: 'normal', label: '版心：中', value: '48rem' },
+            { key: 'wide', label: '版心：宽', value: '54rem' },
+        ];
+        const LINE_HEIGHT_MODES = [
+            { key: 'compact', label: '行距：紧', value: '1.9' },
+            { key: 'normal', label: '行距：中', value: '2' },
+            { key: 'loose', label: '行距：舒', value: '2.18' },
+        ];
+        const TTS_RATE_OPTIONS = [0.9, 1, 1.15, 1.3];
+        let isRestoringPosition = false;
+        let saveScrollTimeout = null;
+        let lastReaderState = null;
+        let lastScrollTop = 0;
+        let currentWidthMode = 'normal';
+        let currentLineHeightMode = 'normal';
+        let isTtsPanelOpen = false;
+        const ttsState = {
+            supported: typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
+            isPlaying: false,
+            isPaused: false,
+            isStopping: false,
+            chapterIndex: 0,
+            blockIndex: 0,
+            rate: 1,
+            voices: [],
+            voice: null,
+            sequence: 0,
+        };
+
+        async function init() {
+            try {
+                await loadBook();
+            } catch (error) {
+                showLoadError(error);
+                throw error;
+            }
+
+            renderToc();
+            const savedState = loadReaderState();
+            lastReaderState = { ...savedState };
+            ttsState.rate = TTS_RATE_OPTIONS.includes(savedState.ttsRate) ? savedState.ttsRate : 1;
+            ttsState.chapterIndex = Number.isInteger(savedState.ttsChapterIndex) ? savedState.ttsChapterIndex : 0;
+            ttsState.blockIndex = Number.isInteger(savedState.ttsBlockIndex) ? savedState.ttsBlockIndex : 0;
+            refreshTtsVoices();
+
+            applyTheme(savedState.theme);
+            applyFontSize(savedState.fontSize);
+            applyContentWidth(savedState.widthMode);
+            applyLineHeight(savedState.lineHeightMode);
+
+            const initialIndex = Number.isInteger(savedState.chapterIndex) && bookData[savedState.chapterIndex] ? savedState.chapterIndex : 0;
+            loadChapter(initialIndex, {
+                scrollTop: typeof savedState.scrollTop === 'number' ? savedState.scrollTop : 0,
+                restorePosition: true,
+            });
+
+            const scroller = document.getElementById('main-scroll');
+            scroller.addEventListener('scroll', handleScroll, { passive: true });
+            window.addEventListener('beforeunload', saveReaderState);
+            updateToolbarVisibility(true);
+            updateTtsUi();
+        }
+
+        async function loadBook() {
+            const configResponse = await fetch(withContentVersion(BOOK_INDEX_URL), { cache: 'reload' });
+            if (!configResponse.ok) throw new Error(`无法读取图书索引：${configResponse.status}`);
+
+            bookConfig = await configResponse.json();
+            if (!bookConfig || !Array.isArray(bookConfig.chapters) || bookConfig.chapters.length === 0) {
+                throw new Error('content/book.json 需要提供 chapters 数组。');
+            }
+
+            const baseUrl = BOOK_INDEX_URL.replace(/[^/]+$/, '');
+            bookData = await Promise.all(bookConfig.chapters.map(async (chapterPath, index) => {
+                const response = await fetch(withContentVersion(`${baseUrl}${chapterPath}`), { cache: 'reload' });
+                if (!response.ok) throw new Error(`无法读取章节：${chapterPath}`);
+                const markdown = await response.text();
+                return parseMarkdownChapter(markdown, chapterPath, index);
+            }));
+
+            document.title = `${bookConfig.title || '《小麦说》'}·正式书稿`;
+            const description = document.querySelector('meta[name="description"]');
+            if (description && bookConfig.description) description.setAttribute('content', bookConfig.description);
+        }
+
+        function withContentVersion(url) {
+            const separator = url.includes('?') ? '&' : '?';
+            return `${url}${separator}v=${encodeURIComponent(CONTENT_VERSION)}`;
+        }
+
+        function parseMarkdownChapter(markdown, chapterPath, index) {
+            const { meta, body } = parseFrontmatter(markdown);
+            const blocks = parseMarkdownBlocks(body);
+            const firstHeading = blocks.find(block => block.type === 'h1');
+
+            return {
+                id: meta.slug || chapterPath,
+                type: meta.type || 'chapter',
+                title: meta.title || meta.headline || firstHeading?.text || `第 ${index + 1} 章`,
+                headline: meta.headline || firstHeading?.text || meta.title || '',
+                subheadline: meta.subheadline || '',
+                author: meta.author || '',
+                epigraph: meta.epigraph || '',
+                signature: meta.signature || '',
+                description: meta.description || blocks.filter(block => block.type === 'p').map(block => block.text).join('\n\n'),
+                blocks,
+            };
+        }
+
+        function parseFrontmatter(markdown) {
+            const text = String(markdown || '').replace(/\r\n/g, '\n');
+            if (!text.startsWith('---\n')) return { meta: {}, body: text.trim() };
+
+            const end = text.indexOf('\n---', 4);
+            if (end === -1) return { meta: {}, body: text.trim() };
+
+            const rawMeta = text.slice(4, end).trim();
+            const body = text.slice(end + 4).trim();
+            const meta = {};
+
+            rawMeta.split('\n').forEach((line) => {
+                const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+                if (!match) return;
+                const [, key, rawValue] = match;
+                try {
+                    meta[key] = JSON.parse(rawValue);
+                } catch (error) {
+                    meta[key] = rawValue.replace(/^['"]|['"]$/g, '');
+                }
+            });
+
+            return { meta, body };
+        }
+
+        function parseMarkdownBlocks(markdown) {
+            const blocks = [];
+            let paragraph = [];
+
+            const flushParagraph = () => {
+                const text = paragraph.join('\n').trim();
+                if (text) blocks.push({ type: 'p', text });
+                paragraph = [];
+            };
+
+            String(markdown || '').split('\n').forEach((line) => {
+                const trimmed = line.trim();
+                if (!trimmed) {
+                    flushParagraph();
+                    return;
+                }
+
+                const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
+                if (heading) {
+                    flushParagraph();
+                    blocks.push({ type: `h${heading[1].length}`, text: heading[2].trim() });
+                    return;
+                }
+
+                paragraph.push(trimmed);
+            });
+
+            flushParagraph();
+            return blocks;
+        }
+
+        function showLoadError(error) {
+            const contentArea = document.getElementById('content-area');
+            const headerTitle = document.getElementById('header-title');
+            if (headerTitle) headerTitle.innerText = '内容加载失败';
+            if (!contentArea) return;
+
+            contentArea.innerHTML = `
+                <h1>内容加载失败</h1>
+                <p>页面现在会从 <code>content/book.json</code> 和章节 Markdown 读取内容，请通过本地服务器打开，而不是直接双击 HTML 文件。</p>
+                <p>可在项目目录运行：<code>python3 -m http.server 4173</code>，然后访问 <code>http://localhost:4173</code>。</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400" style="text-indent:0;">${formatInline(String(error.message || error))}</p>
+            `;
+        }
+
+        function renderToc() {
+            const container = document.getElementById('toc-container');
+            container.innerHTML = '';
+
+            bookData.forEach((chapter, index) => {
+                const a = document.createElement('a');
+                a.href = "#";
+                a.className = `chapter-link block px-6 py-3 text-sm transition-colors hover:bg-stone-100 dark:hover:bg-gray-700/40 ${index === currentIndex ? 'bg-amber-50/80 dark:bg-amber-500/10 text-stone-900 dark:text-amber-200 font-medium' : 'text-gray-600 dark:text-gray-400'}`;
+                a.innerText = chapter.title;
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    loadChapter(index);
+                };
+                container.appendChild(a);
+            });
+        }
+
+        function formatInline(text) {
+            return escapeHtml(text)
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`(.+?)`/g, '<code>$1</code>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function escapeAttribute(text) {
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function normalizeSpokenText(text) {
+            return String(text || '')
+                .replace(/\*\*(.+?)\*\*/g, '$1')
+                .replace(/`(.+?)`/g, '$1')
+                .replace(/[#*_]/g, '')
+                .trim();
+        }
+
+        function loadReaderState() {
+            const fallbackTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            const fallback = {
+                chapterIndex: 0,
+                scrollTop: 0,
+                fontSize: 18,
+                theme: fallbackTheme,
+                widthMode: 'normal',
+                lineHeightMode: 'normal',
+                resumeChapterIndex: 0,
+                resumeScrollTop: 0,
+                ttsRate: 1,
+                ttsChapterIndex: 0,
+                ttsBlockIndex: 0,
+            };
+
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return fallback;
+                const parsed = JSON.parse(raw);
+                return {
+                    chapterIndex: Number.isInteger(parsed.chapterIndex) ? parsed.chapterIndex : fallback.chapterIndex,
+                    scrollTop: typeof parsed.scrollTop === 'number' ? parsed.scrollTop : fallback.scrollTop,
+                    fontSize: typeof parsed.fontSize === 'number' ? parsed.fontSize : fallback.fontSize,
+                    theme: parsed.theme === 'dark' || parsed.theme === 'light' ? parsed.theme : fallback.theme,
+                    widthMode: WIDTH_MODES.some(mode => mode.key === parsed.widthMode) ? parsed.widthMode : fallback.widthMode,
+                    lineHeightMode: LINE_HEIGHT_MODES.some(mode => mode.key === parsed.lineHeightMode) ? parsed.lineHeightMode : fallback.lineHeightMode,
+                    resumeChapterIndex: Number.isInteger(parsed.resumeChapterIndex) ? parsed.resumeChapterIndex : fallback.resumeChapterIndex,
+                    resumeScrollTop: typeof parsed.resumeScrollTop === 'number' ? parsed.resumeScrollTop : fallback.resumeScrollTop,
+                    ttsRate: TTS_RATE_OPTIONS.includes(parsed.ttsRate) ? parsed.ttsRate : fallback.ttsRate,
+                    ttsChapterIndex: Number.isInteger(parsed.ttsChapterIndex) ? parsed.ttsChapterIndex : fallback.ttsChapterIndex,
+                    ttsBlockIndex: Number.isInteger(parsed.ttsBlockIndex) ? parsed.ttsBlockIndex : fallback.ttsBlockIndex,
+                };
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        function saveReaderState() {
+            const scroller = document.getElementById('main-scroll');
+            const currentScrollTop = scroller ? scroller.scrollTop : 0;
+            const previousResumeChapterIndex = lastReaderState?.resumeChapterIndex ?? 0;
+            const previousResumeScrollTop = lastReaderState?.resumeScrollTop ?? 0;
+            const state = {
+                chapterIndex: currentIndex,
+                scrollTop: currentScrollTop,
+                fontSize: currentFontSize,
+                theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+                widthMode: currentWidthMode,
+                lineHeightMode: currentLineHeightMode,
+                resumeChapterIndex: currentIndex > 0 ? currentIndex : previousResumeChapterIndex,
+                resumeScrollTop: currentIndex > 0 ? currentScrollTop : previousResumeScrollTop,
+                ttsRate: ttsState.rate,
+                ttsChapterIndex: ttsState.chapterIndex,
+                ttsBlockIndex: ttsState.blockIndex,
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            lastReaderState = { ...state };
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+        }
+
+        function applyFontSize(size) {
+            currentFontSize = Math.min(28, Math.max(14, size || 18));
+            document.getElementById('content-area').style.fontSize = currentFontSize + 'px';
+        }
+
+        function applyContentWidth(modeKey) {
+            const mode = WIDTH_MODES.find(item => item.key === modeKey) || WIDTH_MODES[1];
+            currentWidthMode = mode.key;
+            document.documentElement.style.setProperty('--reader-width', mode.value);
+            const button = document.getElementById('width-btn');
+            if (button) button.textContent = mode.label;
+        }
+
+        function applyLineHeight(modeKey) {
+            const mode = LINE_HEIGHT_MODES.find(item => item.key === modeKey) || LINE_HEIGHT_MODES[1];
+            currentLineHeightMode = mode.key;
+            document.documentElement.style.setProperty('--reader-line-height', mode.value);
+            const button = document.getElementById('spacing-btn');
+            if (button) button.textContent = mode.label;
+        }
+
+        function cycleContentWidth() {
+            const currentModeIndex = WIDTH_MODES.findIndex(item => item.key === currentWidthMode);
+            const nextMode = WIDTH_MODES[(currentModeIndex + 1) % WIDTH_MODES.length];
+            applyContentWidth(nextMode.key);
+            saveReaderState();
+        }
+
+        function cycleLineHeight() {
+            const currentModeIndex = LINE_HEIGHT_MODES.findIndex(item => item.key === currentLineHeightMode);
+            const nextMode = LINE_HEIGHT_MODES[(currentModeIndex + 1) % LINE_HEIGHT_MODES.length];
+            applyLineHeight(nextMode.key);
+            saveReaderState();
+        }
+
+        function handleScroll() {
+            updateReadingProgress();
+            updateToolbarVisibility();
+            if (isRestoringPosition) return;
+            if (saveScrollTimeout) clearTimeout(saveScrollTimeout);
+            saveScrollTimeout = setTimeout(() => {
+                saveReaderState();
+            }, 120);
+        }
+
+        function updateToolbarVisibility(forceShow = false) {
+            const scroller = document.getElementById('main-scroll');
+            const shell = document.getElementById('top-toolbar-shell');
+            if (!scroller || !shell) return;
+
+            const currentScrollTop = scroller.scrollTop;
+            if (forceShow || currentScrollTop < 36 || currentScrollTop < lastScrollTop - 12) {
+                shell.classList.remove('toolbar-hidden');
+            } else if (currentScrollTop > lastScrollTop + 12) {
+                shell.classList.add('toolbar-hidden');
+            }
+            lastScrollTop = currentScrollTop;
+        }
+
+        function updateReadingProgress() {
+            const scroller = document.getElementById('main-scroll');
+            const progress = document.getElementById('reading-progress');
+            const maxScroll = Math.max(scroller.scrollHeight - scroller.clientHeight, 1);
+            const ratio = Math.min(Math.max(scroller.scrollTop / maxScroll, 0), 1);
+            progress.style.width = `${ratio * 100}%`;
+        }
+
+        function getResumeChapter() {
+            if (!lastReaderState) return null;
+            if (lastReaderState.resumeChapterIndex <= 0 && lastReaderState.resumeScrollTop < 80) return null;
+            return bookData[lastReaderState.resumeChapterIndex] || null;
+        }
+
+        function resumeReading() {
+            const resumeState = loadReaderState();
+            lastReaderState = { ...resumeState };
+            if (!bookData[resumeState.resumeChapterIndex]) return;
+            loadChapter(resumeState.resumeChapterIndex, {
+                scrollTop: resumeState.resumeScrollTop || 0,
+                restorePosition: true,
+            });
+        }
+
+        function refreshTtsVoices() {
+            if (!ttsState.supported) return;
+            ttsState.voices = window.speechSynthesis.getVoices();
+            ttsState.voice = ttsState.voices.find(voice => voice.lang === 'zh-CN' && voice.localService)
+                || ttsState.voices.find(voice => voice.lang && voice.lang.toLowerCase().startsWith('zh'))
+                || ttsState.voices.find(voice => voice.lang === 'en-US')
+                || null;
+        }
+
+        function getTtsBlocks() {
+            return Array.from(document.querySelectorAll('#content-area [data-tts-block="true"]'));
+        }
+
+        function clearTtsHighlight() {
+            getTtsBlocks().forEach(block => block.classList.remove('tts-block-active'));
+        }
+
+        function setActiveTtsBlock(index) {
+            const blocks = getTtsBlocks();
+            clearTtsHighlight();
+            const block = blocks[index];
+            if (!block) return;
+            block.classList.add('tts-block-active');
+            block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function isTtsChapterAvailable() {
+            return ttsState.supported && bookData[currentIndex]?.type === 'chapter';
+        }
+
+        function getSavedTtsStartIndex(blocks) {
+            if (ttsState.chapterIndex !== currentIndex) return 0;
+            const safeMax = Math.max(blocks.length - 1, 0);
+            return Math.min(Math.max(ttsState.blockIndex || 0, 0), safeMax);
+        }
+
+        function finishTtsPlayback(resetProgress = true) {
+            ttsState.isPlaying = false;
+            ttsState.isPaused = false;
+            ttsState.isStopping = false;
+            if (resetProgress) {
+                ttsState.chapterIndex = currentIndex;
+                ttsState.blockIndex = 0;
+            }
+            clearTtsHighlight();
+            updateTtsUi();
+            saveReaderState();
+        }
+
+        function speakTtsBlock(index, sequence) {
+            if (!ttsState.supported || sequence !== ttsState.sequence || !ttsState.isPlaying) return;
+
+            const blocks = getTtsBlocks();
+            if (!blocks.length) {
+                finishTtsPlayback(true);
+                return;
+            }
+
+            if (index >= blocks.length) {
+                finishTtsPlayback(true);
+                return;
+            }
+
+            const block = blocks[index];
+            const text = (block?.dataset?.ttsText || block?.innerText || '').trim();
+            if (!text) {
+                speakTtsBlock(index + 1, sequence);
+                return;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-CN';
+            utterance.rate = ttsState.rate;
+            if (ttsState.voice) utterance.voice = ttsState.voice;
+
+            utterance.onstart = () => {
+                if (sequence !== ttsState.sequence) return;
+                ttsState.chapterIndex = currentIndex;
+                ttsState.blockIndex = index;
+                ttsState.isPaused = false;
+                setActiveTtsBlock(index);
+                updateTtsUi();
+                saveReaderState();
+            };
+
+            utterance.onend = () => {
+                if (sequence !== ttsState.sequence || ttsState.isStopping) return;
+                const nextIndex = index + 1;
+                if (nextIndex < blocks.length) {
+                    ttsState.blockIndex = nextIndex;
+                    saveReaderState();
+                    speakTtsBlock(nextIndex, sequence);
+                } else {
+                    finishTtsPlayback(true);
+                }
+            };
+
+            utterance.onerror = () => {
+                if (sequence !== ttsState.sequence) return;
+                finishTtsPlayback(false);
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function startTtsPlayback() {
+            if (!isTtsChapterAvailable()) {
+                updateTtsUi();
+                return;
+            }
+
+            const blocks = getTtsBlocks();
+            if (!blocks.length) {
+                updateTtsUi();
+                return;
+            }
+
+            if (window.speechSynthesis.speaking || window.speechSynthesis.paused) {
+                window.speechSynthesis.cancel();
+            }
+
+            ttsState.sequence += 1;
+            ttsState.isPlaying = true;
+            ttsState.isPaused = false;
+            ttsState.isStopping = false;
+            ttsState.chapterIndex = currentIndex;
+            ttsState.blockIndex = getSavedTtsStartIndex(blocks);
+            updateTtsUi();
+            saveReaderState();
+            speakTtsBlock(ttsState.blockIndex, ttsState.sequence);
+        }
+
+        function pauseTtsPlayback() {
+            if (!ttsState.supported || !ttsState.isPlaying || ttsState.isPaused || !window.speechSynthesis.speaking) return;
+            window.speechSynthesis.pause();
+            ttsState.isPaused = true;
+            updateTtsUi();
+            saveReaderState();
+        }
+
+        function resumeTtsPlayback() {
+            if (!ttsState.supported) return;
+            if (ttsState.isPlaying && ttsState.isPaused && window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+                ttsState.isPaused = false;
+                updateTtsUi();
+                saveReaderState();
+                return;
+            }
+            startTtsPlayback();
+        }
+
+        function stopTtsPlayback(resetProgress = false) {
+            if (!ttsState.supported) return;
+            ttsState.sequence += 1;
+            ttsState.isStopping = true;
+            window.speechSynthesis.cancel();
+            ttsState.isPlaying = false;
+            ttsState.isPaused = false;
+            ttsState.isStopping = false;
+            if (resetProgress) {
+                ttsState.chapterIndex = currentIndex;
+                ttsState.blockIndex = 0;
+            }
+            clearTtsHighlight();
+            updateTtsUi();
+            saveReaderState();
+        }
+
+        function toggleTtsPlayback() {
+            if (!isTtsChapterAvailable()) {
+                updateTtsUi();
+                return;
+            }
+            if (ttsState.isPlaying && !ttsState.isPaused) {
+                pauseTtsPlayback();
+            } else if (ttsState.isPlaying && ttsState.isPaused) {
+                resumeTtsPlayback();
+            } else {
+                startTtsPlayback();
+            }
+        }
+
+        function cycleTtsRate() {
+            const currentIndex = TTS_RATE_OPTIONS.indexOf(ttsState.rate);
+            ttsState.rate = TTS_RATE_OPTIONS[(currentIndex + 1) % TTS_RATE_OPTIONS.length];
+            updateTtsUi();
+            saveReaderState();
+            if (ttsState.isPlaying) {
+                stopTtsPlayback(false);
+                startTtsPlayback();
+            }
+        }
+
+        function toggleTtsPanel() {
+            isTtsPanelOpen = !isTtsPanelOpen;
+            updateTtsUi();
+        }
+
+        function updateTtsUi() {
+            const panel = document.getElementById('tts-panel-shell');
+            const toolbarBtn = document.getElementById('tts-toolbar-btn');
+            const mainBtn = document.getElementById('tts-main-btn');
+            const stopBtn = document.getElementById('tts-stop-btn');
+            const rateBtn = document.getElementById('tts-rate-btn');
+            const status = document.getElementById('tts-status');
+
+            if (panel) panel.classList.toggle('hidden', !isTtsPanelOpen);
+            if (toolbarBtn && !ttsState.supported) toolbarBtn.classList.add('hidden');
+            if (!mainBtn || !stopBtn || !rateBtn || !status) return;
+
+            const chapterReady = bookData[currentIndex]?.type === 'chapter';
+            const canRead = isTtsChapterAvailable();
+            const hasSavedProgress = ttsState.chapterIndex === currentIndex && ttsState.blockIndex > 0;
+
+            mainBtn.disabled = !canRead;
+            stopBtn.disabled = !(ttsState.isPlaying || hasSavedProgress);
+            rateBtn.disabled = !canRead;
+            rateBtn.textContent = `语速 ${ttsState.rate.toFixed(2).replace(/\.00$/, '.0')}x`;
+
+            if (!ttsState.supported) {
+                mainBtn.textContent = '当前不可用';
+                mainBtn.dataset.state = 'idle';
+                status.textContent = '当前浏览器不支持听书功能。';
+                return;
+            }
+
+            if (!chapterReady) {
+                mainBtn.textContent = '正文可听';
+                mainBtn.dataset.state = 'idle';
+                status.textContent = '听书功能在正文页可用。';
+                return;
+            }
+
+            if (ttsState.isPlaying && !ttsState.isPaused) {
+                mainBtn.textContent = '暂停朗读';
+                mainBtn.dataset.state = 'active';
+                status.textContent = `正在朗读本章，第 ${ttsState.blockIndex + 1} 段。`;
+                return;
+            }
+
+            if (ttsState.isPlaying && ttsState.isPaused) {
+                mainBtn.textContent = '继续朗读';
+                mainBtn.dataset.state = 'active';
+                status.textContent = `朗读已暂停，可从第 ${ttsState.blockIndex + 1} 段继续。`;
+                return;
+            }
+
+            mainBtn.dataset.state = 'idle';
+            mainBtn.textContent = hasSavedProgress ? '继续收听' : '听本章';
+            status.textContent = hasSavedProgress
+                ? `已记住本章第 ${ttsState.blockIndex + 1} 段，可继续收听。`
+                : '听书会从本章开始朗读，并记住听到的位置。';
+        }
+
+        function renderContent(chapterData) {
+            if (chapterData.type === 'cover') {
+                const resumeChapter = getResumeChapter();
+                return `
+                    <div class="cover-page">
+                        <div class="cover-card">
+                            <h1 class="cover-title" style="text-align:center; text-indent:0;">${formatInline(chapterData.headline)}</h1>
+                            <p class="cover-subtitle">${formatInline(chapterData.subheadline)}</p>
+                            ${chapterData.author ? `<p class="cover-author">${formatInline(chapterData.author)}</p>` : ''}
+                            <div class="cover-rule"></div>
+                            <p class="cover-description">${formatInline(chapterData.description)}</p>
+                            ${chapterData.epigraph ? `<p class="cover-epigraph">${formatInline(chapterData.epigraph)}</p>` : ''}
+                            <div class="cover-actions">
+                                ${resumeChapter ? `<button class="resume-btn" onclick="resumeReading()" title="回到上次阅读的位置"><span>继续阅读</span><span class="text-sm opacity-80">${resumeChapter.title}</span></button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (chapterData.type === 'chapter') {
+                const blocks = chapterData.blocks || [];
+                let hasRenderedTitle = false;
+                let html = '';
+
+                if (!blocks.some(block => block.type === 'h1')) {
+                    const titleText = normalizeSpokenText([chapterData.headline, chapterData.subheadline].filter(Boolean).join('，'));
+                    html += `<h1 class="tts-block" data-tts-block="true" data-tts-text="${escapeAttribute(titleText)}">${formatInline(chapterData.headline)}${chapterData.subheadline ? `<br><span class="text-lg md:text-xl mt-4 block text-gray-500 font-normal">${formatInline(chapterData.subheadline)}</span>` : ''}</h1>`;
+                    hasRenderedTitle = true;
+                }
+
+                blocks.forEach((block) => {
+                    const text = block.text || '';
+                    const ttsText = escapeAttribute(normalizeSpokenText(text));
+
+                    if (block.type === 'h1') {
+                        if (hasRenderedTitle) return;
+                        hasRenderedTitle = true;
+                        html += `<h1 class="tts-block" data-tts-block="true" data-tts-text="${ttsText}">${formatInline(text)}${chapterData.subheadline ? `<br><span class="text-lg md:text-xl mt-4 block text-gray-500 font-normal">${formatInline(chapterData.subheadline)}</span>` : ''}</h1>`;
+                        return;
+                    }
+
+                    if (block.type === 'h2') {
+                        html += `<h2 class="tts-block" data-tts-block="true" data-tts-text="${ttsText}">${formatInline(text)}</h2>`;
+                        return;
+                    }
+
+                    if (block.type === 'h3') {
+                        html += `<h3 class="tts-block" data-tts-block="true" data-tts-text="${ttsText}">${formatInline(text)}</h3>`;
+                        return;
+                    }
+
+                    html += `<p class="tts-block" data-tts-block="true" data-tts-text="${ttsText}">${formatInline(text)}</p>`;
+                });
+
+                if (chapterData.signature) {
+                    const signature = Array.isArray(chapterData.signature) ? chapterData.signature.join('\n') : chapterData.signature;
+                    html += `<div class="chapter-signature" style="text-indent:0;"><p class="!mb-0" style="text-indent:0;">${formatInline(signature)}</p></div>`;
+                }
+                return html;
+            }
+            return '';
+        }
+
+        function loadChapter(index, options = {}) {
+            if (index < 0 || index >= bookData.length) return;
+            if (ttsState.supported && (ttsState.isPlaying || ttsState.isPaused)) {
+                stopTtsPlayback(false);
+            }
+            currentIndex = index;
+            const chapter = bookData[index];
+            const { scrollTop = 0, restorePosition = false } = options;
+
+            // 数据层传入渲染器，解耦数据与视图
+            document.getElementById('content-area').innerHTML = renderContent(chapter);
+            document.getElementById('header-title').innerText = chapter.title;
+            renderToc();
+
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = false;
+
+            if (index === bookData.length - 1) {
+                nextBtn.innerHTML = `
+                    回到封面
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="ml-2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                `;
+                nextBtn.onclick = () => loadChapter(0);
+            } else {
+                nextBtn.innerHTML = `
+                    下一篇
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="ml-2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                `;
+                nextBtn.onclick = nextChapter;
+            }
+
+            const scroller = document.getElementById('main-scroll');
+            isRestoringPosition = restorePosition;
+            requestAnimationFrame(() => {
+                scroller.scrollTo({
+                    top: restorePosition ? scrollTop : 0,
+                    behavior: restorePosition ? 'auto' : 'smooth'
+                });
+                updateReadingProgress();
+                updateToolbarVisibility(true);
+                isRestoringPosition = false;
+                saveReaderState();
+            });
+
+            if (window.innerWidth < 768) closeSidebar();
+        }
+
+        function prevChapter() { loadChapter(currentIndex - 1); }
+        function nextChapter() { loadChapter(currentIndex + 1); }
+
+        function changeFontSize(delta) {
+            applyFontSize(currentFontSize + delta);
+            saveReaderState();
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            saveReaderState();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            const overlay = document.getElementById('overlay');
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('block');
+            } else {
+                overlay.classList.remove('block');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('block');
+            document.getElementById('overlay').classList.add('hidden');
+        }
+
+        window.onload = init;
+
+        if (ttsState.supported) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                refreshTtsVoices();
+                updateTtsUi();
+            };
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register(`./service-worker.js?v=${encodeURIComponent(CONTENT_VERSION)}`).catch((error) => {
+                    console.warn('service worker registration failed', error);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

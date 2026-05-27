@@ -1,0 +1,18 @@
+{
+  "title": "《小麦说》",
+  "description": "《小麦说》正式书稿，一部关于认知、行动、创造、商业、关系与生命修行的思想非虚构作品。",
+  "chapters": [
+    "chapters/00-cover.md",
+    "chapters/01-summary.md",
+    "chapters/02-preface.md",
+    "chapters/03-vol1.md",
+    "chapters/04-vol2.md",
+    "chapters/05-vol3.md",
+    "chapters/06-vol4.md",
+    "chapters/07-vol5.md",
+    "chapters/08-vol6.md",
+    "chapters/09-vol7.md",
+    "chapters/10-postscript.md",
+    "chapters/11-author-note.md"
+  ]
+}
