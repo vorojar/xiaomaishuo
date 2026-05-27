@@ -609,7 +609,7 @@
     <script>
         // 图书索引：内容在 content/book.json 与 content/chapters/*.md 中维护
         const BOOK_INDEX_URL = './content/book.json';
-        const CONTENT_VERSION = '2026-05-27-final-198225-autoscroll';
+        const CONTENT_VERSION = '2026-05-27-final-198225-autoscroll-fix1';
         let bookConfig = null;
         let bookData = [];
 
@@ -641,6 +641,7 @@
             frameId: null,
             lastFrameAt: 0,
             lastTapAt: 0,
+            lastTouchToggleAt: 0,
             isAdvancingChapter: false,
         };
         const ttsState = {
@@ -969,6 +970,7 @@
 
         function handleReaderDoubleClick(event) {
             if (isInteractiveTarget(event.target)) return;
+            if (Date.now() - autoScrollState.lastTouchToggleAt < 420) return;
             event.preventDefault();
             toggleAutoScroll();
         }
@@ -979,6 +981,7 @@
             if (now - autoScrollState.lastTapAt < 320) {
                 event.preventDefault();
                 autoScrollState.lastTapAt = 0;
+                autoScrollState.lastTouchToggleAt = now;
                 toggleAutoScroll();
                 return;
             }
