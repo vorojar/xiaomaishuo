@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xiaomaishuo-offline-v8-final-198225-lazyload';
+const CACHE_NAME = 'xiaomaishuo-offline-v8-final-198225-lazyload-fix1';
 const CORE_ASSETS = [
     './',
     './index.html',

@@ -614,7 +614,7 @@
     <script>
         // 图书索引：内容在 content/book.json 与 content/chapters/*.md 中维护
         const BOOK_INDEX_URL = './content/book.json';
-        const CONTENT_VERSION = '2026-05-27-final-198225-lazyload';
+        const CONTENT_VERSION = '2026-05-27-final-198225-lazyload-fix1';
         let bookConfig = null;
         let bookData = [];
         const chapterLoadPromises = new Map();
@@ -690,9 +690,11 @@
             scroller.addEventListener('mousedown', handleReaderMouseDown);
             scroller.addEventListener('dblclick', handleReaderDoubleClick);
             scroller.addEventListener('pointerup', handleReaderPointerUp, { passive: false });
-            scroller.addEventListener('wheel', () => stopAutoScroll('已暂停自动滚动'), { passive: true });
+            scroller.addEventListener('wheel', () => {
+                if (autoScrollState.active) stopAutoScroll();
+            }, { passive: true });
             scroller.addEventListener('touchmove', () => {
-                if (autoScrollState.active) stopAutoScroll('已暂停自动滚动');
+                if (autoScrollState.active) stopAutoScroll();
             }, { passive: true });
             window.addEventListener('keydown', handleAutoScrollKeydown);
             window.addEventListener('beforeunload', saveReaderState);
@@ -1084,7 +1086,7 @@
         function handleAutoScrollKeydown(event) {
             if (!autoScrollState.active) return;
             const pauseKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', 'Space'];
-            if (pauseKeys.includes(event.code)) stopAutoScroll('已暂停自动滚动');
+            if (pauseKeys.includes(event.code)) stopAutoScroll();
         }
 
         function toggleAutoScroll() {
