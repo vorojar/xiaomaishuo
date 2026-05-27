@@ -14,5 +14,91 @@
     "chapters/09-vol7.md",
     "chapters/10-postscript.md",
     "chapters/11-author-note.md"
+  ],
+  "chapterMeta": [
+    {
+      "title": "封面",
+      "slug": "cover",
+      "type": "cover",
+      "headline": "小麦说",
+      "subheadline": "洞察世界，观照自我"
+    },
+    {
+      "title": "内容提要",
+      "slug": "summary",
+      "type": "chapter",
+      "headline": "内容提要",
+      "subheadline": "这本书在谈什么"
+    },
+    {
+      "title": "序",
+      "slug": "preface",
+      "type": "chapter",
+      "headline": "序",
+      "subheadline": "写在前面"
+    },
+    {
+      "title": "第一卷：认知与本质篇",
+      "slug": "vol1",
+      "type": "chapter",
+      "headline": "《小麦说》第一卷：认知与本质篇",
+      "subheadline": "看清世界，回到本质"
+    },
+    {
+      "title": "第二卷：拆解与执行篇",
+      "slug": "vol2",
+      "type": "chapter",
+      "headline": "《小麦说》第二卷：拆解与执行篇",
+      "subheadline": "做成事情，拆解与执行"
+    },
+    {
+      "title": "第三卷：变革与创造篇",
+      "slug": "vol3",
+      "type": "chapter",
+      "headline": "《小麦说》第三卷：变革与创造篇",
+      "subheadline": "重建能力，拥抱创造"
+    },
+    {
+      "title": "第四卷：商业与管理篇",
+      "slug": "vol4",
+      "type": "chapter",
+      "headline": "《小麦说》第四卷：商业与管理篇",
+      "subheadline": "进入现实，经营系统"
+    },
+    {
+      "title": "第五卷：心性与自我篇",
+      "slug": "vol5",
+      "type": "chapter",
+      "headline": "《小麦说》第五卷：心性与自我篇",
+      "subheadline": "安顿自己，建立内在秩序"
+    },
+    {
+      "title": "第六卷：情感与社交篇",
+      "slug": "vol6",
+      "type": "chapter",
+      "headline": "《小麦说》第六卷：情感与社交篇",
+      "subheadline": "理解关系，守住边界"
+    },
+    {
+      "title": "第七卷：生死与修行篇",
+      "slug": "vol7",
+      "type": "chapter",
+      "headline": "《小麦说》第七卷：生死与修行篇",
+      "subheadline": "面对终局，活好当下"
+    },
+    {
+      "title": "后记",
+      "slug": "postscript",
+      "type": "chapter",
+      "headline": "后记",
+      "subheadline": "说到最后"
+    },
+    {
+      "title": "作者",
+      "slug": "author-note",
+      "type": "chapter",
+      "headline": "作者",
+      "subheadline": "写在书后"
+    }
   ]
 }

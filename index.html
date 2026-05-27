@@ -578,7 +578,12 @@
         <!-- 文本阅读区 -->
         <div id="main-scroll" class="flex-1 overflow-y-auto scroll-smooth pb-24">
             <div class="reader-shell mx-auto px-6 py-10 md:py-16 prose" id="content-area" style="font-size: 18px;">
-                <!-- 内容由 JS 渲染 -->
+                <div class="cover-page">
+                    <div class="cover-card">
+                        <h1 class="cover-title" style="text-align:center; text-indent:0;">小麦说</h1>
+                        <p class="cover-subtitle">洞察世界，观照自我</p>
+                    </div>
+                </div>
             </div>
 
             <!-- 底部导航按钮 -->
@@ -609,11 +614,13 @@
     <script>
         // 图书索引：内容在 content/book.json 与 content/chapters/*.md 中维护
         const BOOK_INDEX_URL = './content/book.json';
-        const CONTENT_VERSION = '2026-05-27-final-198225-autoscroll-fix2';
+        const CONTENT_VERSION = '2026-05-27-final-198225-lazyload';
         let bookConfig = null;
         let bookData = [];
+        const chapterLoadPromises = new Map();
 
         let currentIndex = 0;
+        let chapterRequestId = 0;
         let currentFontSize = 18;
         const STORAGE_KEY = 'xiaomaishuo-book-reader-state';
         const WIDTH_MODES = [
@@ -678,12 +685,6 @@
             applyContentWidth(savedState.widthMode);
             applyLineHeight(savedState.lineHeightMode);
 
-            const initialIndex = Number.isInteger(savedState.chapterIndex) && bookData[savedState.chapterIndex] ? savedState.chapterIndex : 0;
-            loadChapter(initialIndex, {
-                scrollTop: typeof savedState.scrollTop === 'number' ? savedState.scrollTop : 0,
-                restorePosition: true,
-            });
-
             const scroller = document.getElementById('main-scroll');
             scroller.addEventListener('scroll', handleScroll, { passive: true });
             scroller.addEventListener('mousedown', handleReaderMouseDown);
@@ -697,6 +698,12 @@
             window.addEventListener('beforeunload', saveReaderState);
             updateToolbarVisibility(true);
             updateTtsUi();
+
+            const initialIndex = Number.isInteger(savedState.chapterIndex) && bookData[savedState.chapterIndex] ? savedState.chapterIndex : 0;
+            await loadChapter(initialIndex, {
+                scrollTop: typeof savedState.scrollTop === 'number' ? savedState.scrollTop : 0,
+                restorePosition: true,
+            });
         }
 
         async function loadBook() {
@@ -708,17 +715,71 @@
                 throw new Error('content/book.json 需要提供 chapters 数组。');
             }
 
-            const baseUrl = BOOK_INDEX_URL.replace(/[^/]+$/, '');
-            bookData = await Promise.all(bookConfig.chapters.map(async (chapterPath, index) => {
-                const response = await fetch(withContentVersion(`${baseUrl}${chapterPath}`), { cache: 'reload' });
-                if (!response.ok) throw new Error(`无法读取章节：${chapterPath}`);
-                const markdown = await response.text();
-                return parseMarkdownChapter(markdown, chapterPath, index);
-            }));
+            bookData = bookConfig.chapters.map((chapterPath, index) => createChapterPlaceholder(chapterPath, index));
 
             document.title = `${bookConfig.title || '《小麦说》'}·正式书稿`;
             const description = document.querySelector('meta[name="description"]');
             if (description && bookConfig.description) description.setAttribute('content', bookConfig.description);
+        }
+
+        function createChapterPlaceholder(chapterPath, index) {
+            const meta = Array.isArray(bookConfig.chapterMeta) ? bookConfig.chapterMeta[index] || {} : {};
+            const fallbackTitle = chapterPath.replace(/^chapters\/\d+-?/, '').replace(/\.md$/, '') || `第 ${index + 1} 章`;
+            return {
+                path: chapterPath,
+                id: meta.slug || chapterPath,
+                type: meta.type || 'chapter',
+                title: meta.title || meta.headline || fallbackTitle,
+                headline: meta.headline || meta.title || fallbackTitle,
+                subheadline: meta.subheadline || '',
+                author: '',
+                epigraph: '',
+                signature: '',
+                description: '',
+                blocks: null,
+                loaded: false,
+            };
+        }
+
+        async function loadChapterData(index) {
+            const existing = bookData[index];
+            if (!existing) return null;
+            if (existing.loaded) return existing;
+            if (chapterLoadPromises.has(index)) return chapterLoadPromises.get(index);
+
+            const promise = (async () => {
+                const baseUrl = BOOK_INDEX_URL.replace(/[^/]+$/, '');
+                const response = await fetch(withContentVersion(`${baseUrl}${existing.path}`), { cache: 'reload' });
+                if (!response.ok) throw new Error(`无法读取章节：${existing.path}`);
+                const markdown = await response.text();
+                const parsed = parseMarkdownChapter(markdown, existing.path, index);
+                bookData[index] = {
+                    ...existing,
+                    ...parsed,
+                    path: existing.path,
+                    loaded: true,
+                };
+                return bookData[index];
+            })();
+
+            chapterLoadPromises.set(index, promise);
+            try {
+                return await promise;
+            } catch (error) {
+                chapterLoadPromises.delete(index);
+                throw error;
+            }
+        }
+
+        function prefetchAdjacentChapters(index) {
+            const candidates = [index + 1, index - 1].filter((item) => item >= 0 && item < bookData.length);
+            setTimeout(() => {
+                candidates.forEach((item) => {
+                    if (!bookData[item]?.loaded && !chapterLoadPromises.has(item)) {
+                        loadChapterData(item).catch(() => {});
+                    }
+                });
+            }, 80);
         }
 
         function withContentVersion(url) {
@@ -811,6 +872,31 @@
                 <h1>内容加载失败</h1>
                 <p>页面现在会从 <code>content/book.json</code> 和章节 Markdown 读取内容，请通过本地服务器打开，而不是直接双击 HTML 文件。</p>
                 <p>可在项目目录运行：<code>python3 -m http.server 4173</code>，然后访问 <code>http://localhost:4173</code>。</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400" style="text-indent:0;">${formatInline(String(error.message || error))}</p>
+            `;
+        }
+
+        function renderChapterLoading(chapter) {
+            return `
+                <div class="cover-page">
+                    <div class="cover-card">
+                        <p class="cover-subtitle">正在打开</p>
+                        <h1 class="cover-title" style="text-align:center; text-indent:0;">${formatInline(chapter.headline || chapter.title)}</h1>
+                        ${chapter.subheadline ? `<p class="cover-subtitle">${formatInline(chapter.subheadline)}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showChapterLoadError(error, chapter) {
+            const contentArea = document.getElementById('content-area');
+            const headerTitle = document.getElementById('header-title');
+            if (headerTitle) headerTitle.innerText = '章节加载失败';
+            if (!contentArea) return;
+
+            contentArea.innerHTML = `
+                <h1>章节加载失败</h1>
+                <p>无法打开：<code>${formatInline(chapter?.path || chapter?.title || '未知章节')}</code></p>
                 <p class="text-sm text-gray-500 dark:text-gray-400" style="text-indent:0;">${formatInline(String(error.message || error))}</p>
             `;
         }
@@ -1158,7 +1244,7 @@
         }
 
         function isTtsChapterAvailable() {
-            return ttsState.supported && bookData[currentIndex]?.type === 'chapter';
+            return ttsState.supported && bookData[currentIndex]?.loaded && bookData[currentIndex]?.type === 'chapter';
         }
 
         function getSavedTtsStartIndex(blocks) {
@@ -1342,7 +1428,7 @@
             if (toolbarBtn && !ttsState.supported) toolbarBtn.classList.add('hidden');
             if (!mainBtn || !stopBtn || !rateBtn || !status) return;
 
-            const chapterReady = bookData[currentIndex]?.type === 'chapter';
+            const chapterReady = bookData[currentIndex]?.loaded && bookData[currentIndex]?.type === 'chapter';
             const canRead = isTtsChapterAvailable();
             const hasSavedProgress = ttsState.chapterIndex === currentIndex && ttsState.blockIndex > 0;
 
@@ -1450,24 +1536,10 @@
             return '';
         }
 
-        function loadChapter(index, options = {}) {
-            if (index < 0 || index >= bookData.length) return;
-            const wasAutoScrolling = autoScrollState.active;
-            if (wasAutoScrolling && !options.autoScroll) stopAutoScroll();
-            if (ttsState.supported && (ttsState.isPlaying || ttsState.isPaused)) {
-                stopTtsPlayback(false);
-            }
-            currentIndex = index;
-            const chapter = bookData[index];
-            const { scrollTop = 0, restorePosition = false } = options;
-
-            // 数据层传入渲染器，解耦数据与视图
-            document.getElementById('content-area').innerHTML = renderContent(chapter);
-            document.getElementById('header-title').innerText = chapter.title;
-            renderToc();
-
+        function updateChapterNav(index) {
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
+            if (!prevBtn || !nextBtn) return;
 
             prevBtn.disabled = index === 0;
             nextBtn.disabled = false;
@@ -1493,6 +1565,43 @@
                 `;
                 nextBtn.onclick = nextChapter;
             }
+        }
+
+        async function loadChapter(index, options = {}) {
+            if (index < 0 || index >= bookData.length) return;
+            const requestId = ++chapterRequestId;
+            const wasAutoScrolling = autoScrollState.active;
+            if (wasAutoScrolling && !options.autoScroll) stopAutoScroll();
+            if (ttsState.supported && (ttsState.isPlaying || ttsState.isPaused)) {
+                stopTtsPlayback(false);
+            }
+            currentIndex = index;
+            const placeholder = bookData[index];
+            const { scrollTop = 0, restorePosition = false } = options;
+
+            document.getElementById('header-title').innerText = placeholder.title;
+            renderToc();
+            updateChapterNav(index);
+            updateTtsUi();
+
+            if (!placeholder.loaded) {
+                document.getElementById('content-area').innerHTML = renderChapterLoading(placeholder);
+            }
+
+            let chapter;
+            try {
+                chapter = await loadChapterData(index);
+            } catch (error) {
+                if (requestId === chapterRequestId) showChapterLoadError(error, placeholder);
+                return;
+            }
+            if (requestId !== chapterRequestId) return;
+
+            document.getElementById('content-area').innerHTML = renderContent(chapter);
+            document.getElementById('header-title').innerText = chapter.title;
+            renderToc();
+            updateChapterNav(index);
+            updateTtsUi();
 
             const scroller = document.getElementById('main-scroll');
             isRestoringPosition = restorePosition;
@@ -1512,6 +1621,7 @@
                 }
             });
 
+            prefetchAdjacentChapters(index);
             if (window.innerWidth < 768) closeSidebar();
         }
 
