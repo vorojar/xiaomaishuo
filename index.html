@@ -609,7 +609,7 @@
     <script>
         // 图书索引：内容在 content/book.json 与 content/chapters/*.md 中维护
         const BOOK_INDEX_URL = './content/book.json';
-        const CONTENT_VERSION = '2026-05-27-final-198225-autoscroll-fix1';
+        const CONTENT_VERSION = '2026-05-27-final-198225-autoscroll-fix2';
         let bookConfig = null;
         let bookData = [];
 
@@ -686,6 +686,7 @@
 
             const scroller = document.getElementById('main-scroll');
             scroller.addEventListener('scroll', handleScroll, { passive: true });
+            scroller.addEventListener('mousedown', handleReaderMouseDown);
             scroller.addEventListener('dblclick', handleReaderDoubleClick);
             scroller.addEventListener('pointerup', handleReaderPointerUp, { passive: false });
             scroller.addEventListener('wheel', () => stopAutoScroll('已暂停自动滚动'), { passive: true });
@@ -968,10 +969,16 @@
             return Boolean(target?.closest?.('button, a, input, textarea, select, [role="button"], [contenteditable="true"]'));
         }
 
+        function handleReaderMouseDown(event) {
+            if (event.button !== 0 || event.detail < 2 || isInteractiveTarget(event.target)) return;
+            event.preventDefault();
+        }
+
         function handleReaderDoubleClick(event) {
             if (isInteractiveTarget(event.target)) return;
             if (Date.now() - autoScrollState.lastTouchToggleAt < 420) return;
             event.preventDefault();
+            clearTextSelection();
             toggleAutoScroll();
         }
 
@@ -1000,6 +1007,11 @@
                 return;
             }
             startAutoScroll();
+        }
+
+        function clearTextSelection() {
+            const selection = window.getSelection?.();
+            if (selection && !selection.isCollapsed) selection.removeAllRanges();
         }
 
         function startAutoScroll() {
