@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xiaomaishuo-offline-v6-final-198225-source-aligned';
+const CACHE_NAME = 'xiaomaishuo-offline-v7-final-198225-autoscroll';
 const CORE_ASSETS = [
     './',
     './index.html',

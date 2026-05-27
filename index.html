@@ -396,6 +396,36 @@
             box-shadow: inset 3px 0 0 rgba(251, 191, 36, 0.8);
         }
 
+        .reader-toast {
+            position: fixed;
+            left: 50%;
+            bottom: calc(1.5rem + env(safe-area-inset-bottom));
+            z-index: 60;
+            transform: translate(-50%, 0);
+            padding: 0.68rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(120, 113, 108, 0.18);
+            background: rgba(255, 253, 248, 0.94);
+            color: var(--book-ink);
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.14);
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+            backdrop-filter: blur(14px);
+        }
+
+        .reader-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -0.35rem);
+        }
+
+        .dark .reader-toast {
+            background: rgba(31, 41, 55, 0.94);
+            border-color: rgba(148, 163, 184, 0.2);
+            box-shadow: 0 14px 36px rgba(2, 6, 23, 0.28);
+        }
+
         @media (max-width: 768px) {
             .tts-panel {
                 align-items: flex-start;
@@ -431,6 +461,7 @@
 
     <!-- 遮罩层 (移动端) -->
     <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+    <div id="reader-toast" class="reader-toast" role="status" aria-live="polite"></div>
 
     <!-- 侧边栏目录 -->
     <aside id="sidebar"
@@ -578,7 +609,7 @@
     <script>
         // 图书索引：内容在 content/book.json 与 content/chapters/*.md 中维护
         const BOOK_INDEX_URL = './content/book.json';
-        const CONTENT_VERSION = '2026-05-27-final-198225-source-aligned';
+        const CONTENT_VERSION = '2026-05-27-final-198225-autoscroll';
         let bookConfig = null;
         let bookData = [];
 
@@ -596,6 +627,7 @@
             { key: 'loose', label: '行距：舒', value: '2.18' },
         ];
         const TTS_RATE_OPTIONS = [0.9, 1, 1.15, 1.3];
+        const AUTO_SCROLL_SPEED = 38;
         let isRestoringPosition = false;
         let saveScrollTimeout = null;
         let lastReaderState = null;
@@ -603,6 +635,14 @@
         let currentWidthMode = 'normal';
         let currentLineHeightMode = 'normal';
         let isTtsPanelOpen = false;
+        let readerToastTimeout = null;
+        const autoScrollState = {
+            active: false,
+            frameId: null,
+            lastFrameAt: 0,
+            lastTapAt: 0,
+            isAdvancingChapter: false,
+        };
         const ttsState = {
             supported: typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
             isPlaying: false,
@@ -645,6 +685,13 @@
 
             const scroller = document.getElementById('main-scroll');
             scroller.addEventListener('scroll', handleScroll, { passive: true });
+            scroller.addEventListener('dblclick', handleReaderDoubleClick);
+            scroller.addEventListener('pointerup', handleReaderPointerUp, { passive: false });
+            scroller.addEventListener('wheel', () => stopAutoScroll('已暂停自动滚动'), { passive: true });
+            scroller.addEventListener('touchmove', () => {
+                if (autoScrollState.active) stopAutoScroll('已暂停自动滚动');
+            }, { passive: true });
+            window.addEventListener('keydown', handleAutoScrollKeydown);
             window.addEventListener('beforeunload', saveReaderState);
             updateToolbarVisibility(true);
             updateTtsUi();
@@ -914,6 +961,111 @@
             const nextMode = LINE_HEIGHT_MODES[(currentModeIndex + 1) % LINE_HEIGHT_MODES.length];
             applyLineHeight(nextMode.key);
             saveReaderState();
+        }
+
+        function isInteractiveTarget(target) {
+            return Boolean(target?.closest?.('button, a, input, textarea, select, [role="button"], [contenteditable="true"]'));
+        }
+
+        function handleReaderDoubleClick(event) {
+            if (isInteractiveTarget(event.target)) return;
+            event.preventDefault();
+            toggleAutoScroll();
+        }
+
+        function handleReaderPointerUp(event) {
+            if (event.pointerType !== 'touch' || isInteractiveTarget(event.target)) return;
+            const now = Date.now();
+            if (now - autoScrollState.lastTapAt < 320) {
+                event.preventDefault();
+                autoScrollState.lastTapAt = 0;
+                toggleAutoScroll();
+                return;
+            }
+            autoScrollState.lastTapAt = now;
+        }
+
+        function handleAutoScrollKeydown(event) {
+            if (!autoScrollState.active) return;
+            const pauseKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', 'Space'];
+            if (pauseKeys.includes(event.code)) stopAutoScroll('已暂停自动滚动');
+        }
+
+        function toggleAutoScroll() {
+            if (autoScrollState.active) {
+                stopAutoScroll('已暂停自动滚动');
+                return;
+            }
+            startAutoScroll();
+        }
+
+        function startAutoScroll() {
+            const scroller = document.getElementById('main-scroll');
+            if (!scroller) return;
+
+            if (ttsState.supported && (ttsState.isPlaying || ttsState.isPaused)) {
+                stopTtsPlayback(false);
+            }
+
+            autoScrollState.active = true;
+            autoScrollState.lastFrameAt = 0;
+            autoScrollState.isAdvancingChapter = false;
+            showReaderToast('自动滚动中');
+            autoScrollState.frameId = requestAnimationFrame(stepAutoScroll);
+        }
+
+        function stopAutoScroll(message = '') {
+            if (autoScrollState.frameId) cancelAnimationFrame(autoScrollState.frameId);
+            autoScrollState.active = false;
+            autoScrollState.frameId = null;
+            autoScrollState.lastFrameAt = 0;
+            autoScrollState.isAdvancingChapter = false;
+            if (message) showReaderToast(message);
+            saveReaderState();
+        }
+
+        function stepAutoScroll(timestamp) {
+            if (!autoScrollState.active) return;
+
+            const scroller = document.getElementById('main-scroll');
+            if (!scroller) {
+                stopAutoScroll();
+                return;
+            }
+
+            if (!autoScrollState.lastFrameAt) autoScrollState.lastFrameAt = timestamp;
+            const elapsedSeconds = Math.min((timestamp - autoScrollState.lastFrameAt) / 1000, 0.08);
+            autoScrollState.lastFrameAt = timestamp;
+
+            const maxScroll = Math.max(scroller.scrollHeight - scroller.clientHeight, 0);
+            const nextTop = Math.min(scroller.scrollTop + AUTO_SCROLL_SPEED * elapsedSeconds, maxScroll);
+            scroller.scrollTop = nextTop;
+
+            if (maxScroll - scroller.scrollTop <= 1) {
+                if (currentIndex < bookData.length - 1 && !autoScrollState.isAdvancingChapter) {
+                    autoScrollState.isAdvancingChapter = true;
+                    setTimeout(() => {
+                        if (!autoScrollState.active) return;
+                        loadChapter(currentIndex + 1, { autoScroll: true });
+                    }, 700);
+                } else if (currentIndex >= bookData.length - 1) {
+                    stopAutoScroll('已到全书结尾');
+                }
+                return;
+            }
+
+            autoScrollState.frameId = requestAnimationFrame(stepAutoScroll);
+        }
+
+        function showReaderToast(message) {
+            const toast = document.getElementById('reader-toast');
+            if (!toast || !message) return;
+            toast.textContent = message;
+            toast.classList.add('show');
+            if (readerToastTimeout) clearTimeout(readerToastTimeout);
+            readerToastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 1400);
         }
 
         function handleScroll() {
@@ -1285,6 +1437,8 @@
 
         function loadChapter(index, options = {}) {
             if (index < 0 || index >= bookData.length) return;
+            const wasAutoScrolling = autoScrollState.active;
+            if (wasAutoScrolling && !options.autoScroll) stopAutoScroll();
             if (ttsState.supported && (ttsState.isPlaying || ttsState.isPaused)) {
                 stopTtsPlayback(false);
             }
@@ -1330,12 +1484,17 @@
             requestAnimationFrame(() => {
                 scroller.scrollTo({
                     top: restorePosition ? scrollTop : 0,
-                    behavior: restorePosition ? 'auto' : 'smooth'
+                    behavior: restorePosition || options.autoScroll ? 'auto' : 'smooth'
                 });
                 updateReadingProgress();
                 updateToolbarVisibility(true);
                 isRestoringPosition = false;
                 saveReaderState();
+                if (wasAutoScrolling && options.autoScroll) {
+                    autoScrollState.isAdvancingChapter = false;
+                    autoScrollState.lastFrameAt = 0;
+                    autoScrollState.frameId = requestAnimationFrame(stepAutoScroll);
+                }
             });
 
             if (window.innerWidth < 768) closeSidebar();
