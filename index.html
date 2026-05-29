@@ -614,7 +614,7 @@
     <script>
         // 图书索引：内容在 content/book.json 与 content/chapters/*.md 中维护
         const BOOK_INDEX_URL = './content/book.json';
-        const CONTENT_VERSION = '2026-05-27-final-198225-lazyload-fix1';
+        const CONTENT_VERSION = '2026-05-29-final-198225-chapter-routes';
         let bookConfig = null;
         let bookData = [];
         const chapterLoadPromises = new Map();
@@ -698,13 +698,20 @@
             }, { passive: true });
             window.addEventListener('keydown', handleAutoScrollKeydown);
             window.addEventListener('beforeunload', saveReaderState);
+            window.addEventListener('hashchange', handleRouteChange);
+            window.addEventListener('popstate', handleRouteChange);
             updateToolbarVisibility(true);
             updateTtsUi();
 
-            const initialIndex = Number.isInteger(savedState.chapterIndex) && bookData[savedState.chapterIndex] ? savedState.chapterIndex : 0;
+            const routedIndex = getChapterIndexFromLocation();
+            const hasRoute = routedIndex !== null;
+            const initialIndex = hasRoute
+                ? routedIndex
+                : Number.isInteger(savedState.chapterIndex) && bookData[savedState.chapterIndex] ? savedState.chapterIndex : 0;
             await loadChapter(initialIndex, {
-                scrollTop: typeof savedState.scrollTop === 'number' ? savedState.scrollTop : 0,
-                restorePosition: true,
+                scrollTop: hasRoute ? 0 : typeof savedState.scrollTop === 'number' ? savedState.scrollTop : 0,
+                restorePosition: !hasRoute,
+                replaceRoute: true,
             });
         }
 
@@ -787,6 +794,47 @@
         function withContentVersion(url) {
             const separator = url.includes('?') ? '&' : '?';
             return `${url}${separator}v=${encodeURIComponent(CONTENT_VERSION)}`;
+        }
+
+        function getChapterIndexById(id) {
+            if (!id) return null;
+            let normalized = String(id).replace(/^#/, '').replace(/^chapter\//, '');
+            try {
+                normalized = decodeURIComponent(normalized);
+            } catch (error) {
+                return null;
+            }
+            const index = bookData.findIndex((chapter) => chapter.id === normalized);
+            return index >= 0 ? index : null;
+        }
+
+        function getChapterIndexFromLocation() {
+            const hashIndex = getChapterIndexById(window.location.hash);
+            if (hashIndex !== null) return hashIndex;
+
+            const queryIndex = getChapterIndexById(new URLSearchParams(window.location.search).get('chapter'));
+            return queryIndex;
+        }
+
+        function updateChapterRoute(index, options = {}) {
+            const chapter = bookData[index];
+            if (!chapter?.id) return;
+
+            const targetHash = `#${encodeURIComponent(chapter.id)}`;
+            if (window.location.hash === targetHash) return;
+
+            const url = `${window.location.pathname}${window.location.search}${targetHash}`;
+            if (options.replace) {
+                window.history.replaceState(null, '', url);
+                return;
+            }
+            window.history.pushState(null, '', url);
+        }
+
+        function handleRouteChange() {
+            const routedIndex = getChapterIndexFromLocation();
+            if (routedIndex === null || routedIndex === currentIndex) return;
+            loadChapter(routedIndex, { skipRoute: true });
         }
 
         function parseMarkdownChapter(markdown, chapterPath, index) {
@@ -909,7 +957,7 @@
 
             bookData.forEach((chapter, index) => {
                 const a = document.createElement('a');
-                a.href = "#";
+                a.href = `#${encodeURIComponent(chapter.id)}`;
                 a.className = `chapter-link block px-6 py-3 text-sm transition-colors hover:bg-stone-100 dark:hover:bg-gray-700/40 ${index === currentIndex ? 'bg-amber-50/80 dark:bg-amber-500/10 text-stone-900 dark:text-amber-200 font-medium' : 'text-gray-600 dark:text-gray-400'}`;
                 a.innerText = chapter.title;
                 a.onclick = (e) => {
@@ -1580,6 +1628,7 @@
             currentIndex = index;
             const placeholder = bookData[index];
             const { scrollTop = 0, restorePosition = false } = options;
+            if (!options.skipRoute) updateChapterRoute(index, { replace: options.replaceRoute });
 
             document.getElementById('header-title').innerText = placeholder.title;
             renderToc();
