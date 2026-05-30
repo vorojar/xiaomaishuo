@@ -1,4 +1,4 @@
-const CACHE_NAME = 'xiaomaishuo-offline-v9-final-198225-chapter-routes';
+const CACHE_NAME = 'xiaomaishuo-offline-v10-final-volume-quotes';
 const CORE_ASSETS = [
     './',
     './index.html',
